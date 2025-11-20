@@ -1,0 +1,81 @@
+{
+    "data": {
+        "dir": "../Data"
+    },
+
+    "dataloader": {
+        "type": "CustomImageDataloader", 
+        "args": {
+            "batch_size": 64,
+            "shuffle": true,
+            "validation_split": 0.2,
+            "num_workers": 0
+        }
+    },
+
+    "model": {
+        "type": "resnet50",
+        "pretrained": true,
+        "num_classes": 10
+    },
+
+    "criterion": {
+        "type": "CrossEntropyLoss",
+        "args": {
+            "label_smoothing": 0.1
+        }
+    }, 
+
+    "metrics": "accuracy",
+
+    "phase1": {
+        "name": "FC Only Training",
+        "unfreeze_layers": ["fc"],
+        "epochs": 10,
+        "optimizer": {
+            "type": "Adam", 
+            "lr": 0.001,
+            "weight_decay": 1e-3
+        },
+        "scheduler": {
+            "type": "ReduceLROnPlateau",
+            "args": {
+                "mode": "min", 
+                "factor": 0.5, 
+                "patience": 3
+            }
+        },
+        "early_stopping": {
+            "patience": 5,
+            "min_delta": 0.001
+        }
+    },
+
+    "phase2": {
+        "name": "Unfreeze Layer3 and Layer4",
+        "unfreeze_layers": ["layer3", "layer4", "fc"],
+        "epochs": 15,
+        "optimizer": {
+            "type": "Adam", 
+            "lr": 3e-4, 
+            "weight_decay": 2e-4
+        },
+        "scheduler": {
+            "type": "ReduceLROnPlateau",
+            "args": {
+                "mode": "min", 
+                "factor": 0.5, 
+                "patience": 3
+            }
+        },
+        "early_stopping": {
+            "patience": 4,
+            "min_delta": 0.001
+        }
+    },
+
+    "checkpoint": {
+        "dir": "./checkpoints",
+        "save_best_only": true
+    }
+}
