@@ -16,7 +16,7 @@
     "model": {
         "type": "resnet50",
         "pretrained": true,
-        "num_classes": 10
+        "num_classes": 5
     },
 
     "criterion": {
@@ -46,8 +46,10 @@
             }
         },
         "early_stopping": {
-            "patience": 5,
-            "min_delta": 0.001
+            "args": {
+                "patience": 5,
+                "min_delta": 0.001
+            }  
         }
     },
 
@@ -69,9 +71,11 @@
             }
         },
         "early_stopping": {
-            "patience": 4,
-            "min_delta": 0.001
-        }
+            "args": {
+                "patience": 4,
+                "min_delta": 0.001
+            }
+        }    
     },
 
     "checkpoint": {
